@@ -19,7 +19,7 @@ function updateTimer() {
     const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
     document.getElementById("timer").innerHTML =
-        `${days} дней<br>${hours} часов ${minutes} минут ${seconds} секунд`;
+        days + " дней<br>" + hours + " часов " + minutes + " минут " + seconds + " секунд";
 }
 
 updateTimer();
@@ -27,7 +27,7 @@ setInterval(updateTimer, 1000);
 
 
 // =======================
-// Отправка формы RSVP (через скрытый iframe, без fetch)
+// Отправка формы RSVP через скрытый iframe (НЕ fetch!)
 // =======================
 
 document.getElementById("rsvp-form").addEventListener("submit", function(e) {
@@ -37,15 +37,16 @@ document.getElementById("rsvp-form").addEventListener("submit", function(e) {
     
     // Собираем выбранные напитки
     var drinks = [];
-    document.querySelectorAll('input[type="checkbox"]:checked').forEach(function(cb) {
-        drinks.push(cb.value);
-    });
+    var checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+    for (var i = 0; i < checkboxes.length; i++) {
+        drinks.push(checkboxes[i].value);
+    }
     
     // Проверка: имя не пустое
     if (guestName.length < 2) {
         document.getElementById("message").innerHTML = "Пожалуйста, введите ФИО";
         document.getElementById("message").style.color = "#C75B5B";
-        e.preventDefault();
+        e.preventDefault(); // Не отправляем
         return;
     }
     
@@ -64,5 +65,5 @@ document.getElementById("rsvp-form").addEventListener("submit", function(e) {
     }, 2000);
     
     // Форма отправится сама в скрытый iframe
-    // e.preventDefault() НЕ вызываем — отправка должна произойти!
+    // e.preventDefault() НЕ вызываем — мы хотим, чтобы отправка произошла!
 });
